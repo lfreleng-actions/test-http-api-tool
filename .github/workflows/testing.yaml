@@ -1,0 +1,127 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025 The Linux Foundation
+
+name: 'Test HTTP API Tool'
+
+# yamllint disable-line rule:truthy
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL to test (default: https://linuxfoundation.org)'
+        required: false
+        type: string
+        default: 'https://linuxfoundation.org'
+      expected_code:
+        description: 'Expected HTTP status code'
+        required: false
+        type: string
+        default: '200'
+
+permissions:
+  contents: read
+
+jobs:
+  test-uvx-mode:
+    name: 'Test UVX Deployment'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Harden Runner
+        # yamllint disable-line rule:line-length
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a
+        with:
+          egress-policy: audit
+
+      - name: Test website with UVX mode
+        id: test-uvx
+        # yamllint disable-line rule:line-length
+        uses: lfreleng-actions/http-api-tool-docker@main # Test current release
+        with:
+          deploy: uvx
+          url: ${{ inputs.url || 'https://linuxfoundation.org' }}
+          service_name: 'Linux Foundation Website (UVX)'
+          expected_http_code: ${{ inputs.expected_code || '200' }}
+          retries: 3
+          initial_sleep_time: 1
+          max_delay: 5
+
+      - name: Display UVX test results
+        if: always()
+        # yamllint disable rule:line-length
+        run: |
+          {
+            echo "## 🚀 UVX Deployment Results"
+            echo ""
+            echo "- **Status Code**: ${{ steps.test-uvx.outputs.response_http_code }}"
+            echo "- **Total Time**: ${{ steps.test-uvx.outputs.total_time }}s"
+            echo "- **Connect Time**: ${{ steps.test-uvx.outputs.connect_time }}s"
+            echo "- **Time Delay**: ${{ steps.test-uvx.outputs.time_delay }}s"
+            echo "- **Response Time Exceeded**: ${{ steps.test-uvx.outputs.response_time_exceeded }}"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+        # yamllint enable rule:line-length
+
+  test-docker-mode:
+    name: 'Test Docker Deployment'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Harden Runner
+        # yamllint disable-line rule:line-length
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a
+        with:
+          egress-policy: audit
+
+      - name: Test website with Docker mode
+        id: test-docker
+        # yamllint disable-line rule:line-length
+        uses: lfreleng-actions/http-api-tool-docker@main # Test current release
+        with:
+          deploy: docker
+          url: ${{ inputs.url || 'https://linuxfoundation.org' }}
+          service_name: 'Linux Foundation Website (Docker)'
+          expected_http_code: ${{ inputs.expected_code || '200' }}
+          retries: 3
+          initial_sleep_time: 1
+          max_delay: 5
+
+      - name: Display Docker test results
+        if: always()
+        # yamllint disable rule:line-length
+        run: |
+          {
+            echo "## 🐳 Docker Deployment Results"
+            echo ""
+            echo "- **Status Code**: ${{ steps.test-docker.outputs.response_http_code }}"
+            echo "- **Total Time**: ${{ steps.test-docker.outputs.total_time }}s"
+            echo "- **Connect Time**: ${{ steps.test-docker.outputs.connect_time }}s"
+            echo "- **Time Delay**: ${{ steps.test-docker.outputs.time_delay }}s"
+            echo "- **Response Time Exceeded**: ${{ steps.test-docker.outputs.response_time_exceeded }}"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+        # yamllint enable rule:line-length
+
+  compare-results:
+    name: 'Compare Deployment Modes'
+    runs-on: ubuntu-latest
+    needs: [test-uvx-mode, test-docker-mode]
+    if: always()
+    timeout-minutes: 2
+    steps:
+      - name: Compare performance
+        # yamllint disable rule:line-length
+        run: |
+          {
+            echo "## 📊 Deployment Mode Comparison"
+            echo ""
+            echo "Both deployment modes tested the same endpoint in parallel."
+            echo ""
+            echo "### Test Configuration"
+            echo "- **URL**: ${{ inputs.url || 'https://linuxfoundation.org' }}"
+            echo "- **Expected Code**: ${{ inputs.expected_code || '200' }}"
+            echo ""
+            echo "### Results"
+            echo "Check the individual job summaries above for detailed metrics."
+          } >> "$GITHUB_STEP_SUMMARY"
