@@ -58,14 +58,20 @@ jobs:
           {
             echo "## 🚀 UVX Deployment Results"
             echo ""
-            echo "- **Status Code**: ${{ steps.test-uvx.outputs.response_http_code }}"
-            echo "- **Total Time**: ${{ steps.test-uvx.outputs.total_time }}s"
-            echo "- **Connect Time**: ${{ steps.test-uvx.outputs.connect_time }}s"
-            echo "- **Time Delay**: ${{ steps.test-uvx.outputs.time_delay }}s"
-            echo "- **Response Time Exceeded**: ${{ steps.test-uvx.outputs.response_time_exceeded }}"
+            echo "- **Status Code**: ${STEPS_TEST_UVX_OUTPUTS_RESPONSE_HTTP_CODE}"
+            echo "- **Total Time**: ${STEPS_TEST_UVX_OUTPUTS_TOTAL_TIME}s"
+            echo "- **Connect Time**: ${STEPS_TEST_UVX_OUTPUTS_CONNECT_TIME}s"
+            echo "- **Time Delay**: ${STEPS_TEST_UVX_OUTPUTS_TIME_DELAY}s"
+            echo "- **Response Time Exceeded**: ${STEPS_TEST_UVX_OUTPUTS_RESPONSE_TIME_EXCEEDED}"
             echo ""
           } >> "$GITHUB_STEP_SUMMARY"
-        # yamllint enable rule:line-length
+        env:
+          STEPS_TEST_UVX_OUTPUTS_RESPONSE_HTTP_CODE: ${{ steps.test-uvx.outputs.response_http_code }}
+          STEPS_TEST_UVX_OUTPUTS_TOTAL_TIME: ${{ steps.test-uvx.outputs.total_time }}
+          STEPS_TEST_UVX_OUTPUTS_CONNECT_TIME: ${{ steps.test-uvx.outputs.connect_time }}
+          STEPS_TEST_UVX_OUTPUTS_TIME_DELAY: ${{ steps.test-uvx.outputs.time_delay }}
+          STEPS_TEST_UVX_OUTPUTS_RESPONSE_TIME_EXCEEDED: ${{ steps.test-uvx.outputs.response_time_exceeded }}
+          # yamllint enable rule:line-length
 
   test-docker-mode:
     name: 'Test Docker Deployment'
@@ -98,14 +104,20 @@ jobs:
           {
             echo "## 🐳 Docker Deployment Results"
             echo ""
-            echo "- **Status Code**: ${{ steps.test-docker.outputs.response_http_code }}"
-            echo "- **Total Time**: ${{ steps.test-docker.outputs.total_time }}s"
-            echo "- **Connect Time**: ${{ steps.test-docker.outputs.connect_time }}s"
-            echo "- **Time Delay**: ${{ steps.test-docker.outputs.time_delay }}s"
-            echo "- **Response Time Exceeded**: ${{ steps.test-docker.outputs.response_time_exceeded }}"
+            echo "- **Status Code**: ${STEPS_TEST_DOCKER_OUTPUTS_RESPONSE_HTTP_CODE}"
+            echo "- **Total Time**: ${STEPS_TEST_DOCKER_OUTPUTS_TOTAL_TIME}s"
+            echo "- **Connect Time**: ${STEPS_TEST_DOCKER_OUTPUTS_CONNECT_TIME}s"
+            echo "- **Time Delay**: ${STEPS_TEST_DOCKER_OUTPUTS_TIME_DELAY}s"
+            echo "- **Response Time Exceeded**: ${STEPS_TEST_DOCKER_OUTPUTS_RESPONSE_TIME_EXCEEDED}"
             echo ""
           } >> "$GITHUB_STEP_SUMMARY"
-        # yamllint enable rule:line-length
+        env:
+          STEPS_TEST_DOCKER_OUTPUTS_RESPONSE_HTTP_CODE: ${{ steps.test-docker.outputs.response_http_code }}
+          STEPS_TEST_DOCKER_OUTPUTS_TOTAL_TIME: ${{ steps.test-docker.outputs.total_time }}
+          STEPS_TEST_DOCKER_OUTPUTS_CONNECT_TIME: ${{ steps.test-docker.outputs.connect_time }}
+          STEPS_TEST_DOCKER_OUTPUTS_TIME_DELAY: ${{ steps.test-docker.outputs.time_delay }}
+          STEPS_TEST_DOCKER_OUTPUTS_RESPONSE_TIME_EXCEEDED: ${{ steps.test-docker.outputs.response_time_exceeded }}
+          # yamllint enable rule:line-length
 
   compare-results:
     name: 'Compare Deployment Modes'
