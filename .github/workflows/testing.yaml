@@ -34,14 +34,14 @@ jobs:
     steps:
       - name: Harden Runner
         # yamllint disable-line rule:line-length
-        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2  # v2.22.2
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43  # v2.22.3
         with:
           egress-policy: audit
 
       - name: Test website with UVX mode
         id: test-uvx
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/http-api-tool-docker@1a44737b6c3b1d3341d5491641bb03727a072a63  # v1.1.2
+        uses: lfreleng-actions/http-api-tool-docker@f4ee5b9d44acced243a34b596eca50fc89b7e255  # v1.1.4
         with:
           deploy: uvx
           url: ${{ inputs.url || 'https://linuxfoundation.org' }}
@@ -80,14 +80,14 @@ jobs:
     steps:
       - name: Harden Runner
         # yamllint disable-line rule:line-length
-        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2  # v2.22.2
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43  # v2.22.3
         with:
           egress-policy: audit
 
       - name: Test website with Docker mode
         id: test-docker
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/http-api-tool-docker@1a44737b6c3b1d3341d5491641bb03727a072a63  # v1.1.2
+        uses: lfreleng-actions/http-api-tool-docker@f4ee5b9d44acced243a34b596eca50fc89b7e255  # v1.1.4
         with:
           deploy: docker
           url: ${{ inputs.url || 'https://linuxfoundation.org' }}
