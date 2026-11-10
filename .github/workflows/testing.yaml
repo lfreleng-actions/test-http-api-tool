@@ -41,7 +41,7 @@ jobs:
       - name: Test website with UVX mode
         id: test-uvx
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/http-api-tool-docker@f4ee5b9d44acced243a34b596eca50fc89b7e255  # v1.1.4
+        uses: lfreleng-actions/http-api-tool-docker@6ec54763f68da620a20b3ad4c78137f766f976f7  # v1.1.5
         with:
           deploy: uvx
           url: ${{ inputs.url || 'https://linuxfoundation.org' }}
@@ -87,7 +87,7 @@ jobs:
       - name: Test website with Docker mode
         id: test-docker
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/http-api-tool-docker@f4ee5b9d44acced243a34b596eca50fc89b7e255  # v1.1.4
+        uses: lfreleng-actions/http-api-tool-docker@6ec54763f68da620a20b3ad4c78137f766f976f7  # v1.1.5
         with:
           deploy: docker
           url: ${{ inputs.url || 'https://linuxfoundation.org' }}
